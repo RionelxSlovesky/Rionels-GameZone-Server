@@ -71,7 +71,7 @@ async function run() {
       }
     });
 
-    app.put("/updateToy/:id", async (req, res) => {
+    app.put("/toys/:id", async (req, res) => {
       try {
         const id = req.params.id;
         const toy = req.body;
