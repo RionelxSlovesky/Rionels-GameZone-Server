@@ -33,8 +33,28 @@ async function run() {
 
     app.get("/toys", async (req, res) => {
       try {
-        const cursor = toysCollection.find();
-        const result = await cursor.toArray();
+        if (req.query.sellerEmail) {
+          query = {
+            sellerEmail: req.query.sellerEmail,
+          };
+        }
+        const cursor = toysCollection.find(query).limit(20);
+        query = {};
+        result = await cursor.toArray();
+        res.send(result);
+      } catch (err) {
+        console.log(err.message);
+      }
+    });
+
+    app.get("/toys/:id", async (req, res) => {
+      try {
+        const id = req.params.id;
+
+        const query = { _id: new ObjectId(id) };
+
+        const result = await toysCollection.findOne(query);
+
         res.send(result);
       } catch (err) {
         console.log(err.message);
@@ -51,14 +71,11 @@ async function run() {
       }
     });
 
-    app.get("/toys/:id", async (req, res) => {
+    app.delete("/toys/:id", async (req, res) => {
       try {
         const id = req.params.id;
-
         const query = { _id: new ObjectId(id) };
-
-        const result = await toysCollection.findOne(query);
-
+        const result = await toysCollection.deleteOne(query);
         res.send(result);
       } catch (err) {
         console.log(err.message);
