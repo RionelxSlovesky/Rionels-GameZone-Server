@@ -35,11 +35,13 @@ async function run() {
       try {
         let query = {};
         if (req.query.sellerEmail) {
-          query = {
-            sellerEmail: req.query.sellerEmail,
-          };
+          query.sellerEmail = req.query.sellerEmail;
         }
-        const cursor = toysCollection.find(query).limit(20);
+       let cursor = toysCollection.find(query).limit(20);
+        if(req.query.sort == 1 || req.query.sort == -1){
+          cursor = toysCollection.find(query).sort( { price: parseInt(req.query.sort) } )
+
+        }
         result = await cursor.toArray();
         res.send(result);
       } catch (err) {
@@ -80,7 +82,7 @@ async function run() {
         const updatedToy = {
           $set: {
             toyName: toy.toyName,
-            price: toy.price,
+            price: parseInt(toy.price),
             subCategory: toy.subCategory,
             photoURL: toy.photoURL,
             rating: toy.rating,
