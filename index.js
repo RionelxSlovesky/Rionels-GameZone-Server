@@ -33,13 +33,13 @@ async function run() {
 
     app.get("/toys", async (req, res) => {
       try {
+        let query = {};
         if (req.query.sellerEmail) {
           query = {
             sellerEmail: req.query.sellerEmail,
           };
         }
         const cursor = toysCollection.find(query).limit(20);
-        query = {};
         result = await cursor.toArray();
         res.send(result);
       } catch (err) {
