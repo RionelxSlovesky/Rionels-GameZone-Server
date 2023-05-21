@@ -31,11 +31,21 @@ async function run() {
 
     const toysCollection = client.db("gameZoneDatabase").collection("toys");
 
+    app.get("/toys", async (req, res) => {
+      try {
+        const cursor = toysCollection.find();
+        const result = await cursor.toArray()
+        res.send(result);
+      } catch (err) {
+        console.log(err.message);
+      }
+    });
+
     app.post("/toys", async (req, res) => {
       try {
         const toy = req.body;
         const result = await toysCollection.insertOne(toy);
-        res.send(result)
+        res.send(result);
       } catch (err) {
         console.log(err.message);
       }
